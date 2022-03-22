@@ -12,15 +12,14 @@ import {
 } from "./utils/points";
 import { Environment } from "@react-three/drei";
 import { ControlsContainer } from "./styled";
-import * as THREE from "three";
 
 const CameraController = () => {
   const { camera, gl } = useThree();
   useEffect(() => {
     const controls = new OrbitControls(camera, gl.domElement);
 
-    controls.minDistance = 1;
-    controls.maxDistance = 60;
+    controls.minDistance = 10;
+    controls.maxDistance = 10;
     return () => {
       controls.dispose();
     };
@@ -47,16 +46,18 @@ export const App = () => {
           max={possibleEdgePointsNumber - 1}
           onChange={handleStartPointChange}
           value={possibleEdgePoints.indexOf(startPoint)}
+          name="Path start point"
         />
         <Slider
           min={0}
           max={possibleEdgePointsNumber - 1}
           onChange={handleEndPointChange}
           value={possibleEdgePoints.indexOf(endPoint)}
+          name="Path end point"
         />
       </ControlsContainer>
 
-      <Canvas camera={{ position: [5, -5, 5], fov: 75 }}>
+      <Canvas camera={{ position: [5, -5, 5], fov: 20 }}>
         {window.innerWidth > 1000 ? (
           <Suspense fallback={null}>
             <Environment

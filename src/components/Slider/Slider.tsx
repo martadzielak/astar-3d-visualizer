@@ -1,19 +1,26 @@
-import { StyledSlider, StyledThumb, StyledTrack } from "./styled";
+import { Label, StyledSlider, StyledThumb, StyledTrack } from "./styled";
 
-export const Slider = ({ min, max, onChange, value }: any, state: any) => {
+export const Slider = (
+  { min, max, onChange, value, name }: any,
+  state: any
+) => {
   return (
-    <StyledSlider
-      onChange={onChange}
-      renderTrack={Track}
-      renderThumb={Thumb}
-      value={value}
-      min={min}
-      max={max}
-    />
+    <>
+      <Label>{name}</Label>
+      <StyledSlider
+        onChange={onChange}
+        renderTrack={Track}
+        renderThumb={Thumb}
+        value={value}
+        defaultValue={value}
+        min={min}
+        max={max}
+      />
+    </>
   );
 };
 
-const Thumb = (props: any, state: any) => <StyledThumb {...props} />;
+const Thumb = (props: any) => <StyledThumb {...props} />;
 const Track = (props: any, state: any) => (
   <StyledTrack {...props} index={state.index} />
 );

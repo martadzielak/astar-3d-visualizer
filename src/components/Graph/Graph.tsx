@@ -1,14 +1,9 @@
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import { FC, useMemo, useState } from "react";
-import { TextureLoader } from "three";
 import { Point } from "../../types/types";
 import { aStar } from "../../utils/getPath";
 import { points } from "../../utils/points";
-// @ts-ignore
-import roughnessMapUrl from "../../assets/roughnessMap.png";
-// @ts-ignore
-import bumpMapUrl from "../../assets/bumpMap.jpg";
 
 interface IGraphProps {
   startPoint: Point;
@@ -17,10 +12,6 @@ interface IGraphProps {
 
 export const Graph: FC<IGraphProps> = ({ startPoint, endPoint }) => {
   const [rotation, setRotation] = useState(0);
-  const [roughnessMap, bumpMap] = useLoader(TextureLoader, [
-    roughnessMapUrl,
-    bumpMapUrl,
-  ]);
   useFrame(() => {
     setRotation(rotation + 1);
   });
@@ -35,16 +26,12 @@ export const Graph: FC<IGraphProps> = ({ startPoint, endPoint }) => {
         {points.obstaclesArray.map((point, i) => {
           return (
             <mesh key={"point" + i} position={[point.x, point.y, point.z]}>
-              {/* <boxGeometry args={[1, 1, 1]} /> */}
               <RoundedBox args={[1, 1, 1]} radius={0.1} smoothness={3}>
                 <meshStandardMaterial
                   attach="material"
-                  metalness={0.95}
-                  // roughness={0.5}
-                  bumpMap={bumpMap}
+                  metalness={1}
                   bumpScale={0.001}
-                  roughnessMap={roughnessMap}
-                  color={0xaaaaaa}
+                  color={0x777777}
                 />
               </RoundedBox>
             </mesh>
