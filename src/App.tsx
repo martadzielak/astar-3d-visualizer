@@ -67,7 +67,10 @@ export const App = () => {
             <Graph startPoint={startPoint} endPoint={endPoint} />
           </Suspense>
         ) : (
-          <color attach={"background"} args={["gray"]} />
+          <>
+            <color attach={"background"} args={["gray"]} />
+            <Graph startPoint={startPoint} endPoint={endPoint} />
+          </>
         )}
         <CameraController />
         <ambientLight intensity={1} color={0xffffff} />
