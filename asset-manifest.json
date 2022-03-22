@@ -1,15 +1,13 @@
 {
   "files": {
     "main.css": "/astar-3d-visualizer/static/css/main.5aa184b9.css",
-    "main.js": "/astar-3d-visualizer/static/js/main.4b94280d.js",
-    "static/media/roughnessMap.png": "/astar-3d-visualizer/static/media/roughnessMap.2c4e07cc453081f1dbf3.png",
-    "static/media/bumpMap.jpg": "/astar-3d-visualizer/static/media/bumpMap.4592fdb7d94b351206ca.jpg",
+    "main.js": "/astar-3d-visualizer/static/js/main.8617a341.js",
     "index.html": "/astar-3d-visualizer/index.html",
     "main.5aa184b9.css.map": "/astar-3d-visualizer/static/css/main.5aa184b9.css.map",
-    "main.4b94280d.js.map": "/astar-3d-visualizer/static/js/main.4b94280d.js.map"
+    "main.8617a341.js.map": "/astar-3d-visualizer/static/js/main.8617a341.js.map"
   },
   "entrypoints": [
     "static/css/main.5aa184b9.css",
-    "static/js/main.4b94280d.js"
+    "static/js/main.8617a341.js"
   ]
 }
