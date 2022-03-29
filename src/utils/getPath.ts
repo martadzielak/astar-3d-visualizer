@@ -5,7 +5,6 @@ import {
   encodePoint,
   Point,
 } from "./encodeDecodePoint";
-import { encodedObstaclesSet } from "./points";
 
 /** d */
 function weight(ep1: EncodedPoint, ep2: EncodedPoint) {
@@ -33,7 +32,7 @@ function lowestFScore(
   return minimalElement!;
 }
 
-function getNeighbors(element: EncodedPoint) {
+function getNeighbors(element: EncodedPoint, encodedObstaclesSet: Set<string>) {
   const range = [-1, 0, 1];
   const neighbors = [];
 
@@ -84,7 +83,11 @@ function reconstructPath(
   });
 }
 
-export function aStar(startPoint: Point, endPoint: Point) {
+export function aStar(
+  startPoint: Point,
+  endPoint: Point,
+  encodedObstaclesSet: Set<string>
+) {
   const encodedStartPoint = encodePoint(startPoint);
   const encodedEndPoint = encodePoint(endPoint);
 
@@ -108,7 +111,7 @@ export function aStar(startPoint: Point, endPoint: Point) {
     }
 
     openSet.delete(current);
-    const neighbors = getNeighbors(current);
+    const neighbors = getNeighbors(current, encodedObstaclesSet);
     for (const neighbor of neighbors) {
       const tentative_gScore =
         getOrInf(gScore, current) + weight(current, neighbor);

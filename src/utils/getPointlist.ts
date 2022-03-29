@@ -1,4 +1,4 @@
-import { EncodedPoint, Point } from "../types/types";
+import { IEncodedPoint, IPoint } from "../types/types";
 import { decodePoint, encodePoint } from "./encodeDecodePoint";
 
 const getRandomInt = (min: number, max: number) => {
@@ -12,7 +12,7 @@ const generateRandomPoint = (
   max: number,
   pointsList: Set<String>
 ) => {
-  let candidate: EncodedPoint | null = null;
+  let candidate: IEncodedPoint | null = null;
 
   do {
     candidate = encodePoint({
@@ -30,7 +30,7 @@ export const generatePoints = (
   min: number,
   max: number
 ) => {
-  const pointsList = new Set<EncodedPoint>();
+  const pointsList = new Set<IEncodedPoint>();
 
   for (let i = 0; i < numberOfPoints; i++) {
     // Creating three random coordinates for a final point in a 3D space
@@ -79,16 +79,16 @@ export const generatePoints = (
 
   return {
     obstaclesArray: obstacles,
-    defaultEdgePoints: [defaultStartPoint, defaultEndPoint],
+    edgePoints: [defaultStartPoint, defaultEndPoint],
   };
 };
 
 export const getAllPossibleEdgePoints = (
-  pointArr: Point[],
+  pointArr: IPoint[],
   min: number,
   max: number
 ) => {
-  const allPossiblePoints = new Set<Point>();
+  const allPossiblePoints = new Set<IPoint>();
   for (let x = min; x <= max; x++) {
     for (let y = min; y <= max; y++) {
       for (let z = min; z <= max; z++) {
@@ -99,11 +99,11 @@ export const getAllPossibleEdgePoints = (
   return getArraysDifference(Array.from(allPossiblePoints), pointArr);
 };
 
-const getArraysDifference = (arrA: Point[], arrB: Point[]) => {
-  const isSamePoint = (a: Point, b: Point) =>
+const getArraysDifference = (arrA: IPoint[], arrB: IPoint[]) => {
+  const isSamePoint = (a: IPoint, b: IPoint) =>
     a.x === b.x && a.y === b.y && a.z === b.z;
 
-  const onlyInLeft = (arr1: Point[], arr2: Point[], compareFunction: any) =>
+  const onlyInLeft = (arr1: IPoint[], arr2: IPoint[], compareFunction: any) =>
     arr1.filter(
       (leftValue) =>
         !arr2.some((rightValue) => compareFunction(leftValue, rightValue))

@@ -1,7 +1,12 @@
-export interface Point {
+export interface IPoint {
   x: number;
   y: number;
   z: number;
 }
 
-export type EncodedPoint = string;
+export type IEncodedPoint = string;
+
+export interface IPoints {
+  obstaclesArray: IPoint[];
+  edgePoints: IPoint[];
+}

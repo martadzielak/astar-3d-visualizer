@@ -4,14 +4,12 @@ import { Suspense, useEffect, useState } from "react";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Slider } from "./components/Slider/Slider";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-
-import {
-  points,
-  possibleEdgePoints,
-  possibleEdgePointsNumber,
-} from "./utils/points";
+import { IPoint, IPoints } from "./types/types";
 import { Environment } from "@react-three/drei";
-import { ControlsContainer } from "./styled";
+import { ControlsContainer, StyledButton } from "./styled";
+import { pointsNumber, min, max } from "./constants/constants";
+import { encodePoint } from "./utils/encodeDecodePoint";
+import { generatePoints, getAllPossibleEdgePoints } from "./utils/getPointlist";
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -27,14 +25,32 @@ const CameraController = () => {
 };
 
 export const App = () => {
-  const [startPoint, setStartPoint] = useState(points.defaultEdgePoints[0]);
-  const [endPoint, setEndPoint] = useState(points.defaultEdgePoints[1]);
+  const [edgePoints, setEdgePoints] = useState<IPoints["edgePoints"]>([]);
+  const [possibleEdgePoints, setPossibleEdgepoints] = useState<IPoint[]>([]);
+  const [obstaclesArray, setObstaclesArray] = useState<
+    IPoints["obstaclesArray"]
+  >([]);
+
+  useEffect(() => {
+    const points = generatePoints(pointsNumber, min, max);
+    const getPossibleEdgePointsArr = Array.from(
+      getAllPossibleEdgePoints(obstaclesArray, min, max)
+    );
+    setPossibleEdgepoints(getPossibleEdgePointsArr);
+    setObstaclesArray(points.obstaclesArray);
+  }, []);
+
+  useEffect(() => {
+    const points = generatePoints(pointsNumber, min, max);
+    setEdgePoints(points.edgePoints);
+  }, [obstaclesArray]);
 
   const handleStartPointChange = (index: number) => {
-    setStartPoint(possibleEdgePoints[index]);
+    setEdgePoints([possibleEdgePoints[index], edgePoints[1]]);
   };
+
   const handleEndPointChange = (index: number) => {
-    setEndPoint(possibleEdgePoints[index]);
+    setEdgePoints([edgePoints[0], possibleEdgePoints[index]]);
   };
 
   return (
@@ -42,18 +58,28 @@ export const App = () => {
       <ControlsContainer>
         <Slider
           min={0}
-          max={possibleEdgePointsNumber - 1}
+          max={possibleEdgePoints.length - 1}
           onChange={handleStartPointChange}
-          value={possibleEdgePoints.indexOf(startPoint)}
+          value={possibleEdgePoints.indexOf(edgePoints[0])}
           name="Path start point"
         />
         <Slider
           min={0}
-          max={possibleEdgePointsNumber - 1}
+          max={possibleEdgePoints.length - 1}
           onChange={handleEndPointChange}
-          value={possibleEdgePoints.indexOf(endPoint)}
+          value={possibleEdgePoints.indexOf(edgePoints[1])}
           name="Path end point"
         />
+        <StyledButton
+          onClick={() =>
+            setObstaclesArray(
+              generatePoints(pointsNumber, min, max).obstaclesArray
+            )
+          }
+          type="button"
+        >
+          Regenerate
+        </StyledButton>
       </ControlsContainer>
 
       <Canvas camera={{ position: [5, -5, 5], fov: 20 }}>
@@ -64,14 +90,19 @@ export const App = () => {
               files={"sunset.hdr"}
               path={"/astar-3d-visualizer/"} //quick workaround for gh-pages
             />
-            <Graph startPoint={startPoint} endPoint={endPoint} />
           </Suspense>
         ) : (
           <>
             <color attach={"background"} args={["gray"]} />
-            <Graph startPoint={startPoint} endPoint={endPoint} />
           </>
         )}
+        <Graph
+          points={{ obstaclesArray: obstaclesArray, edgePoints: edgePoints }}
+          encodedObstaclesSet={
+            new Set(obstaclesArray.map((point: IPoint) => encodePoint(point)))
+          }
+        />
+
         <CameraController />
         <ambientLight intensity={1} color={0xffffff} />
         <pointLight position={[0, 0, 0]} />

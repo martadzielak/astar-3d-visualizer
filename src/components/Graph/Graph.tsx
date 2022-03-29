@@ -1,29 +1,29 @@
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import { FC, useMemo, useState } from "react";
-import { Point } from "../../types/types";
+import { IPoint, IPoints } from "../../types/types";
 import { aStar } from "../../utils/getPath";
-import { points } from "../../utils/points";
 
 interface IGraphProps {
-  startPoint: Point;
-  endPoint: Point;
+  points: IPoints;
+  encodedObstaclesSet: Set<string>;
 }
 
-export const Graph: FC<IGraphProps> = ({ startPoint, endPoint }) => {
+export const Graph: FC<IGraphProps> = ({ points, encodedObstaclesSet }) => {
   const [rotation, setRotation] = useState(0);
   useFrame(() => {
     setRotation(rotation + 1);
   });
   const path = useMemo(
-    () => aStar(startPoint, endPoint),
-    [startPoint, endPoint]
+    () =>
+      aStar(points.edgePoints[0], points.edgePoints[1], encodedObstaclesSet),
+    [points.edgePoints, encodedObstaclesSet]
   );
 
   return (
     <group scale={0.1} rotation={[0, rotation / 500, 0]}>
       <group>
-        {points.obstaclesArray.map((point, i) => {
+        {points.obstaclesArray.map((point: IPoint, i: number) => {
           return (
             <mesh key={"point" + i} position={[point.x, point.y, point.z]}>
               <RoundedBox args={[1, 1, 1]} radius={0.1} smoothness={3}>
@@ -39,7 +39,7 @@ export const Graph: FC<IGraphProps> = ({ startPoint, endPoint }) => {
         })}
       </group>
       <group>
-        {[startPoint, endPoint].map((point, i) => {
+        {[points.edgePoints[0], points.edgePoints[1]].map((point, i) => {
           return (
             <mesh key={"edgepoint" + i} position={[point.x, point.y, point.z]}>
               <RoundedBox args={[1, 1, 1]} radius={0.1} smoothness={3}>
